@@ -1,0 +1,42 @@
+# Kernel source, archives, signatures, and extracted trees
+/workspace/
+*.tar
+*.tar.*
+*.sign
+
+# Debian package products
+*.deb
+*.ddeb
+*.build
+*.buildinfo
+*.changes
+*.dsc
+*.orig.tar.*
+/artifacts/
+
+# Build output and logs
+/build/
+/out/
+/logs/
+*.log
+
+# Common kernel build artifacts
+*.o
+*.a
+*.ko
+*.ko.*
+*.cmd
+*.mod
+*.mod.c
+*.order
+Module.symvers
+modules.builtin*
+vmlinux
+System.map
+.config
+.tmp_versions/
+
+# Editor and OS noise
+*~
+*.swp
+.DS_Store
