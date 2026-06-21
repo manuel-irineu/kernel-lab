@@ -31,6 +31,12 @@ The current boot uses `6.12.94+deb13-amd64`. Its command line includes
 620 remains the desktop GPU through `i915`, while the NVIDIA GeForce MX230 uses
 the proprietary `nvidia` driver for local Ollama workloads.
 
+NVIDIA `550.163.01` is compatible with the tested Debian 6.12 kernels above,
+but its DKMS module did not compile for the tested custom
+`7.1.1-kernel-lab`. The daily kernel therefore remains
+`6.12.94+deb13-amd64`; the custom kernel was removed after the failed DKMS
+validation.
+
 These are stated baseline values, not settings that scripts may change. Run
 `scripts/00-check-system.sh` before each major stage to collect current,
 read-only facts.

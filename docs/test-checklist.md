@@ -16,6 +16,29 @@ evidence with `scripts/06-post-boot-tests.sh` under ignored `logs/`.
 - [x] The running config was copied from `/boot/config-$(uname -r)`.
 - [x] `olddefconfig` completed successfully with non-fatal warnings.
 - [x] The final kernel release was configured as `7.1.1-kernel-lab`.
+- [x] `make bindeb-pkg` generated the image, headers, libc headers, and debug
+  image packages.
+
+## Mandatory pre-reboot gate
+
+After installing a custom image and headers, inspect the exact target release
+before rebooting:
+
+```bash
+dkms status
+sudo dkms autoinstall -k <kernel-release>
+grep -R "<kernel-release>" /boot/grub/grub.cfg
+ls -lh /boot | grep "<kernel-release>"
+```
+
+The DKMS autoinstall command changes system state and must be run manually only
+after reviewing the target release. **Do not reboot into the custom kernel if
+any required DKMS module fails to build or install.** A generated image,
+initramfs, and GRUB entry do not prove that NVIDIA is compatible.
+
+For `7.1.1-kernel-lab`, NVIDIA `550.163.01` failed this gate during package
+post-installation. The image package remained half-configured, the custom kernel
+was removed, and no post-boot acceptance test was performed.
 
 ## Identity and recovery
 
@@ -43,3 +66,7 @@ evidence with `scripts/06-post-boot-tests.sh` under ignored `logs/`.
 - [ ] The Debian kernel package has not been removed.
 - [ ] The exact known-good GRUB entry is known.
 - [ ] Failures are documented before package changes are attempted.
+- [ ] `sudo dpkg --audit` reports no half-configured custom kernel package after
+  cleanup.
+- [ ] GRUB and `/boot` no longer contain an unintended custom-kernel entry after
+  rollback.

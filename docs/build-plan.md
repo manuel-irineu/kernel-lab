@@ -19,6 +19,24 @@ not instead of, the working Debian kernel.
 - `olddefconfig` completed successfully. It emitted non-fatal warnings that
   should remain available in the build log for review.
 - The configured final kernel release string is `7.1.1-kernel-lab`.
+- `make bindeb-pkg` completed successfully and generated:
+
+  ```text
+  /home/manuel/build/kernel/build/linux-image-7.1.1-kernel-lab_7.1.1-2_amd64.deb
+  /home/manuel/build/kernel/build/linux-headers-7.1.1-kernel-lab_7.1.1-2_amd64.deb
+  /home/manuel/build/kernel/build/linux-libc-dev_7.1.1-2_amd64.deb
+  /home/manuel/build/kernel/build/linux-image-7.1.1-kernel-lab-dbg_7.1.1-2_amd64.deb
+  ```
+
+- The image and headers packages were installed for testing. Installation
+  created `/boot/vmlinuz-7.1.1-kernel-lab`, generated
+  `/boot/initrd.img-7.1.1-kernel-lab`, and added a GRUB entry.
+- The image post-installation phase failed because
+  `nvidia-current/550.163.01` could not build for `7.1.1-kernel-lab`. The
+  headers were configured, but the image package was left half-configured
+  (`iF`).
+- The custom kernel was removed. GRUB no longer lists it, and the notebook is
+  back on the Debian `6.12.94+deb13-amd64` daily kernel.
 
 ## Stages
 
@@ -35,6 +53,22 @@ not instead of, the working Debian kernel.
 8. In a separate manual step, inspect and install only the new image and needed
    headers. This repository intentionally does not automate installation.
 9. Boot deliberately, run the checklist, and roll back on any material failure.
+
+For this experiment, stage 6 succeeded. Stage 7 failed before the custom kernel
+was booted, so stages 8 and 9 ended in package cleanup and rollback rather than
+daily-kernel acceptance.
+
+## Result and lesson learned
+
+The kernel compilation and Debian package generation were successful. The
+blocker was the out-of-tree NVIDIA DKMS module, not the kernel build process.
+Linux `7.1.1-kernel-lab` is unsuitable as the daily kernel on this notebook
+while Debian NVIDIA `550.163.01` is required.
+
+A newer upstream kernel can compile and package successfully while remaining
+unusable on a daily system because required out-of-tree DKMS modules—especially
+NVIDIA—may not support its APIs. DKMS compatibility must be proven for the exact
+kernel release before rebooting into it.
 
 ## Principles
 

@@ -28,3 +28,33 @@ workload on the working kernel.
 If any gate fails, preserve logs and boot the known-good Debian kernel. Do not
 remove the fallback and do not blindly force a DKMS build.
 
+## Linux 7.1.1 experiment failure
+
+The `linux-image-7.1.1-kernel-lab` and
+`linux-headers-7.1.1-kernel-lab` packages were installed for testing. During
+the image package post-installation phase, DKMS attempted to build
+`nvidia-current/550.163.01` for `7.1.1-kernel-lab` and failed. The detailed
+build log was written to:
+
+```text
+/var/lib/dkms/nvidia-current/550.163.01/build/make.log
+```
+
+The errors fell into three kernel-API compatibility categories:
+
+- Virtual memory API change:
+  `struct vm_area_struct has no member named '__vm_flags'; did you mean 'vm_flags'?`
+- Interrupt-context API change:
+  `implicit declaration of function 'in_irq'`
+- DMA mapping API change:
+  `const struct dma_map_ops has no member named 'map_resource'`
+
+The headers package configured successfully, but the image package remained
+half-configured (`iF`) because its post-installation hook could not complete.
+This result demonstrates that the Linux kernel and Debian packages were valid
+enough to build, while NVIDIA 550.163.01 was incompatible with the target
+kernel APIs.
+
+The custom kernel was removed without forcing NVIDIA installation or ignoring
+the DKMS failure. NVIDIA `550.163.01` remains usable with the Debian 6.12 daily
+kernels, including `6.12.94+deb13-amd64`.
