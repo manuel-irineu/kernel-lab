@@ -29,7 +29,7 @@ Execution will:
 - run olddefconfig.
 
 No sudo command will be executed.
-No GRUB, initramfs, DKMS, or installed kernel will be modified.
+No GRUB, initramfs, or installed kernel will be modified.
 The resulting .config still requires manual review.
 EOF
     exit 0
