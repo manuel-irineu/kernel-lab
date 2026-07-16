@@ -26,7 +26,6 @@ run_optional 'Debian release' cat /etc/os-release
 run_optional 'Boot command line' cat /proc/cmdline
 run_optional 'PCI devices and drivers' lspci -nnk
 run_optional 'Session type' printenv XDG_SESSION_TYPE
-run_optional 'DKMS status' dkms status
 run_optional 'Loaded modules' lsmod
 run_optional 'Disk usage' df -h
 run_optional 'Memory' free -h
