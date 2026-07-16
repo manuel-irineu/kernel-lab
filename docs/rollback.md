@@ -34,8 +34,8 @@ kernel-removal script.
 
 Perform package cleanup only after booting a known-good Debian kernel. Review
 package names carefully; never remove the running Debian kernel. A maintainer
-script or required module hook can leave a custom image half-configured (`iF`)
-even when its headers are fully configured.
+script can leave a custom image half-configured (`iF`) even when its headers are
+fully configured.
 
 The commands used for the `7.1.1-kernel-lab` experiment were:
 
