@@ -53,22 +53,26 @@ mkdir -p "$LOG_DIR"
 
 readonly REL_SOURCE_DIR="$(realpath --relative-to="$REPO_ROOT" "$SOURCE_DIR")"
 readonly REL_BUILD_DIR_FROM_SOURCE="$(realpath --relative-to="$SOURCE_DIR" "$BUILD_DIR")"
+readonly BUILD_LOG="$LOG_DIR/build-linux-${KERNEL_VERSION}.log"
 
-# PIPESTATUS preserves make's result rather than hiding it behind tee.
+printf 'Build started; detailed output is being written to %s\n' "$BUILD_LOG"
+printf 'This can take a long time for Debian-derived configurations.\n'
+
 set +e
 (
     cd "$REPO_ROOT"
     make -C "$REL_SOURCE_DIR" O="$REL_BUILD_DIR_FROM_SOURCE" -j"$JOBS" bindeb-pkg
-) 2>&1 \
-    | tee "$LOG_DIR/build-linux-${KERNEL_VERSION}.log"
-status=${PIPESTATUS[0]}
+) >"$BUILD_LOG" 2>&1
+status=$?
 set -e
 
 (( status == 0 )) || {
     printf 'Build failed with status %d.\n' "$status" >&2
-    printf 'Review log: %s/build-linux-%s.log\n' "$LOG_DIR" "$KERNEL_VERSION" >&2
+    printf 'Last log lines:\n' >&2
+    tail -n 40 "$BUILD_LOG" >&2 || true
+    printf 'Review log: %s\n' "$BUILD_LOG" >&2
     exit "$status"
 }
 
 printf 'Build completed; inspect generated .deb files. None were installed.\n'
-printf 'Build log: %s/build-linux-%s.log\n' "$LOG_DIR" "$KERNEL_VERSION"
+printf 'Build log: %s\n' "$BUILD_LOG"
