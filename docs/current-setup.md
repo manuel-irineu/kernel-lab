@@ -9,11 +9,10 @@
 | Operating system | Debian GNU/Linux 13 (trixie) |
 | `DEBIAN_VERSION_FULL` | Debian 13 point release |
 | Current kernel | Debian-packaged 6.12 series kernel |
-| Boot parameter | no NVIDIA-specific kernel parameter |
+| Boot parameter | no vendor-specific graphics kernel parameter |
 | Desktop session | Wayland |
 | Integrated GPU | Intel integrated graphics using the `i915` driver |
 | Dedicated GPU | none detected |
-| NVIDIA driver | not installed/detected |
 | DKMS | `dkms` command not installed/detected |
 | Root filesystem available space | sufficient for kernel builds |
 | `/boot/efi` available space | sufficient for the existing boot setup |
@@ -32,9 +31,8 @@ inventory:
 - Intel wireless networking using `iwlwifi`.
 - Intel Ethernet using `e1000e`.
 
-`dkms` and `nvidia-smi` are not available. That means the previous NVIDIA DKMS
-failure is not a required gate for this host. If an out-of-tree module is added
-later, it becomes a new host-specific acceptance gate.
+`dkms` is not available. If an out-of-tree module is added later, it becomes a
+new host-specific acceptance gate.
 
 These are stated baseline values, not settings that scripts may change. Run
 `scripts/00-check-system.sh` before each major stage to collect current,
