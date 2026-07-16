@@ -51,9 +51,15 @@ fi
 
 mkdir -p "$LOG_DIR"
 
+readonly REL_SOURCE_DIR="$(realpath --relative-to="$REPO_ROOT" "$SOURCE_DIR")"
+readonly REL_BUILD_DIR_FROM_SOURCE="$(realpath --relative-to="$SOURCE_DIR" "$BUILD_DIR")"
+
 # PIPESTATUS preserves make's result rather than hiding it behind tee.
 set +e
-make -C "$SOURCE_DIR" O="$BUILD_DIR" -j"$JOBS" bindeb-pkg 2>&1 \
+(
+    cd "$REPO_ROOT"
+    make -C "$REL_SOURCE_DIR" O="$REL_BUILD_DIR_FROM_SOURCE" -j"$JOBS" bindeb-pkg
+) 2>&1 \
     | tee "$LOG_DIR/build-linux-${KERNEL_VERSION}.log"
 status=${PIPESTATUS[0]}
 set -e
