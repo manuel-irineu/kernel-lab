@@ -37,24 +37,26 @@ KERNEL_VERSION=7.1.3 LOCAL_VERSION=-kernel-lab ./scripts/10-build-kernel-package
 
 ## Current host baseline
 
-Captured on `2026-07-15` using read-only inventory commands.
+Captured using read-only inventory commands. Exact hostnames, usernames, device
+serials, and absolute home-directory paths are intentionally omitted from the
+public documentation.
 
 | Component | Current value |
 | --- | --- |
-| Hostname | `pchome` |
-| Operating system | Debian GNU/Linux 13.6 (`trixie`) |
-| Current Debian kernel | `6.12.95+deb13-amd64` |
-| CPU | Intel Core i5-6500T, 4 cores / 4 threads, 2.50 GHz base, 3.10 GHz max |
+| Host | Local Debian 13 workstation |
+| Operating system | Debian GNU/Linux 13 (`trixie`) |
+| Current Debian kernel | Debian-packaged 6.12 series kernel |
+| CPU | Intel x86_64 CPU, 4 cores / 4 threads |
 | Architecture | `x86_64` |
-| Integrated GPU | Intel HD Graphics 530, driver `i915` |
+| Integrated GPU | Intel integrated graphics, driver `i915` |
 | Dedicated GPU | none detected |
-| Memory | 30 GiB RAM, no swap |
-| Root storage | Asgard AS960GS3-S7, 894.3G SATA SSD |
-| Root filesystem | Btrfs on `/dev/sda2`, approximately 877G free |
-| EFI system partition | `/dev/sda1`, vfat, mounted at `/boot/efi` |
-| Ethernet | Intel Ethernet Connection I219-LM, driver `e1000e` |
-| Wi-Fi | Intel Wireless 8260, driver `iwlwifi` |
-| Audio | Intel 100 Series/C230 HD Audio, driver `snd_hda_intel` |
+| Memory | sufficient RAM for local kernel builds |
+| Root storage | SATA SSD with sufficient free space for kernel builds |
+| Root filesystem | Btrfs root filesystem |
+| EFI system partition | vfat ESP mounted at `/boot/efi` |
+| Ethernet | Intel Ethernet, driver `e1000e` |
+| Wi-Fi | Intel wireless, driver `iwlwifi` |
+| Audio | Intel HD Audio, driver `snd_hda_intel` |
 | Desktop session | Wayland |
 | Out-of-tree modules | no `dkms` command detected |
 
@@ -168,7 +170,7 @@ installed, visible in GRUB, and documented as the rollback target.
 
 ## Historical note
 
-An earlier ASUS VivoBook experiment successfully built Linux
+An earlier laptop experiment successfully built Linux
 `7.1.1-kernel-lab` as Debian packages, but the kernel was rejected for daily use
 because NVIDIA `nvidia-current/550.163.01` failed to build through DKMS for that
 kernel. That failure is documented under `docs/nvidia-dkms-validation.md` and is
