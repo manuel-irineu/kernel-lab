@@ -3,7 +3,7 @@
 Target: upstream Linux as Debian `.deb` packages, installed alongside, not
 instead of, the working Debian kernel.
 
-Default script target: `7.1.1-kernel-lab`.
+Default script target: `7.1.3-kernel-lab`.
 
 ## Current progress on the new host
 
@@ -66,9 +66,13 @@ Default script target: `7.1.1-kernel-lab`.
 4. Preview or run `scripts/10-build-kernel-packages.sh`. Preview is the
    default; `--execute` downloads, verifies the detached GPG signature, prepares
    config, and builds packages without root.
-5. Signature verification requires the kernel.org signer key to already exist
-   in the user's GPG keyring. The scripts do not import or trust keys
-   automatically.
+5. Signature verification requires Greg Kroah-Hartman's kernel.org signer key
+   to already exist in the user's GPG keyring. The scripts do not import or
+   trust keys automatically. The expected fingerprint is:
+
+   ```text
+   647F 2865 4894 E3BD 4571  99BE 38DB BDC8 6092 693E
+   ```
 6. The out-of-tree configuration is prepared from
    `/boot/config-$(uname -r)`, and `olddefconfig` completed with non-fatal
    warnings. Review the resulting configuration before building.

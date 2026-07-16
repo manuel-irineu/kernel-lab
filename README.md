@@ -26,13 +26,13 @@ repository.
 Default build target:
 
 ```text
-Linux 7.1.1 with local version suffix -kernel-lab
+Linux 7.1.3 with local version suffix -kernel-lab
 ```
 
 The target can be overridden without editing scripts:
 
 ```bash
-KERNEL_VERSION=7.1.1 LOCAL_VERSION=-kernel-lab ./scripts/10-build-kernel-packages.sh --execute
+KERNEL_VERSION=7.1.3 LOCAL_VERSION=-kernel-lab ./scripts/10-build-kernel-packages.sh --execute
 ```
 
 ## Current host baseline
@@ -85,6 +85,20 @@ Review the build dependency suggestion:
 
 ```bash
 ./scripts/01-install-build-deps.sh
+```
+
+Import the kernel.org stable release signing key if it is not already present
+in the local GPG keyring:
+
+```bash
+gpg --keyserver hkps://keyserver.ubuntu.com --recv-keys 647F28654894E3BD457199BE38DBBDC86092693E
+gpg --fingerprint 647F28654894E3BD457199BE38DBBDC86092693E
+```
+
+The expected fingerprint is:
+
+```text
+647F 2865 4894 E3BD 4571  99BE 38DB BDC8 6092 693E
 ```
 
 Preview the full unprivileged build workflow:
