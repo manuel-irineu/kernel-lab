@@ -49,7 +49,8 @@ dpkg -l | grep -E 'linux-image-7.1.1|linux-headers-7.1.1'
 
 These are manual recovery commands, not commands executed by repository
 scripts. Inspect the output after each step. Do not force module installation,
-bypass DKMS errors, or delete generated build artifacts as part of rollback.
+bypass external module errors, or delete generated build artifacts as part of
+rollback.
 
 After cleanup, GRUB no longer listed `7.1.1-kernel-lab`, and known-good Debian
 kernels remained available.
