@@ -6,12 +6,18 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/kernel-lab-env.sh"
 
 OUT_DIR="$BUILD_PARENT"
-IMAGE_PACKAGE="$OUT_DIR/linux-image-${KERNEL_VERSION}${LOCAL_VERSION}_${KERNEL_VERSION}-1_amd64.deb"
-HEADERS_PACKAGE="$OUT_DIR/linux-headers-${KERNEL_VERSION}${LOCAL_VERSION}_${KERNEL_VERSION}-1_amd64.deb"
-CHANGES_FILE="$OUT_DIR/linux-upstream_${KERNEL_VERSION}-1_amd64.changes"
-BUILDINFO_FILE="$OUT_DIR/linux-upstream_${KERNEL_VERSION}-1_amd64.buildinfo"
 
 failures=0
+
+latest_file() {
+  local files=("$@")
+
+  if [[ "${#files[@]}" -eq 0 ]]; then
+    return 1
+  fi
+
+  printf '%s\n' "${files[@]}" | sort -V | tail -n 1
+}
 
 require_file() {
   local file="$1"
@@ -24,6 +30,21 @@ require_file() {
 
   return 0
 }
+
+shopt -s nullglob
+IMAGE_CANDIDATES=("$OUT_DIR"/linux-image-"${KERNEL_VERSION}${LOCAL_VERSION}"_"${KERNEL_VERSION}"-*_amd64.deb)
+if ! IMAGE_PACKAGE="$(latest_file "${IMAGE_CANDIDATES[@]}")"; then
+  echo "Missing expected artifact: linux-image package for $KERNEL_VERSION$LOCAL_VERSION" >&2
+  exit 1
+fi
+IMAGE_BASENAME="$(basename "$IMAGE_PACKAGE")"
+PACKAGE_REVISION="${IMAGE_BASENAME#linux-image-${KERNEL_VERSION}${LOCAL_VERSION}_}"
+PACKAGE_REVISION="${PACKAGE_REVISION%_amd64.deb}"
+
+HEADERS_PACKAGE="$OUT_DIR/linux-headers-${KERNEL_VERSION}${LOCAL_VERSION}_${PACKAGE_REVISION}_amd64.deb"
+CHANGES_FILE="$OUT_DIR/linux-upstream_${PACKAGE_REVISION}_amd64.changes"
+BUILDINFO_FILE="$OUT_DIR/linux-upstream_${PACKAGE_REVISION}_amd64.buildinfo"
+shopt -u nullglob
 
 print_package_summary() {
   local package="$1"
@@ -59,7 +80,7 @@ check_nvidia_modules() {
   echo "NVIDIA/Nouveau module scan: $(basename "$IMAGE_PACKAGE")"
 
   local matches
-  matches="$(dpkg-deb --contents "$IMAGE_PACKAGE" | grep -Ei '/(nvidia|nouveau|forcedeth|typec_nvidia)[^/]*\.ko$' || true)"
+  matches="$(dpkg-deb --contents "$IMAGE_PACKAGE" | grep -Ei '/(nvidia|nouveau|forcedeth|typec_nvidia)[^/]*\.ko(\.xz)?$' || true)"
 
   if [[ -n "$matches" ]]; then
     echo "FAIL: NVIDIA/Nouveau-related modules found" >&2
@@ -73,6 +94,7 @@ check_nvidia_modules() {
 echo "Inspecting generated kernel packages"
 echo "Kernel version: $KERNEL_VERSION"
 echo "Local version: $LOCAL_VERSION"
+echo "Package revision: $PACKAGE_REVISION"
 echo "Output directory: $OUT_DIR"
 
 print_package_summary "$IMAGE_PACKAGE"
