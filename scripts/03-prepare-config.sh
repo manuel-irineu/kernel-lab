@@ -26,6 +26,7 @@ Execution will:
 - set CONFIG_LOCALVERSION=${LOCAL_VERSION};
 - disable CONFIG_LOCALVERSION_AUTO;
 - clear Debian-specific trusted/revocation key paths;
+- disable NVIDIA/Nouveau kernel options for this Intel-only lab host;
 - run olddefconfig.
 
 No sudo command will be executed.
@@ -74,7 +75,16 @@ cp --no-clobber "$RUNNING_CONFIG" "$BUILD_DIR/.config"
     --set-str LOCALVERSION "$LOCAL_VERSION" \
     --disable LOCALVERSION_AUTO \
     --set-str SYSTEM_TRUSTED_KEYS "" \
-    --set-str SYSTEM_REVOCATION_KEYS ""
+    --set-str SYSTEM_REVOCATION_KEYS "" \
+    --disable DRM_NOUVEAU \
+    --disable FB_NVIDIA \
+    --disable FB_RIVA \
+    --disable FORCEDETH \
+    --disable NET_VENDOR_NVIDIA \
+    --disable NVIDIA_WMI_EC_BACKLIGHT \
+    --disable SND_HDA_CODEC_NVHDMI \
+    --disable SND_HDA_CODEC_NVHDMI_MCP \
+    --disable TYPEC_NVIDIA_ALTMODE
 
 make -C "$SOURCE_DIR" O="$BUILD_DIR" olddefconfig
 
