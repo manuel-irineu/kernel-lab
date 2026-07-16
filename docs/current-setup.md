@@ -13,7 +13,7 @@
 | Desktop session | Wayland |
 | Integrated GPU | Intel integrated graphics using the `i915` driver |
 | Dedicated GPU | none detected |
-| DKMS | `dkms` command not installed/detected |
+| External modules | none required |
 | Root filesystem available space | sufficient for kernel builds |
 | `/boot/efi` available space | sufficient for the existing boot setup |
 | System memory | sufficient RAM for local kernel builds |
@@ -31,8 +31,8 @@ inventory:
 - Intel wireless networking using `iwlwifi`.
 - Intel Ethernet using `e1000e`.
 
-`dkms` is not available. If an out-of-tree module is added later, it becomes a
-new host-specific acceptance gate.
+No external module is required for the current host baseline. If one is added
+later, it becomes a new host-specific acceptance gate.
 
 These are stated baseline values, not settings that scripts may change. Run
 `scripts/00-check-system.sh` before each major stage to collect current,
