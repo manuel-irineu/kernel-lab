@@ -9,9 +9,8 @@ Default script target: `7.1.3-kernel-lab`.
 
 - The current host runs Debian 13 with a Debian-packaged 6.12 series kernel.
 - Graphics are Intel-only and use the `i915` driver.
-- `dkms` and `nvidia-smi` are not installed/detected.
-- The previous NVIDIA DKMS blocker from an earlier laptop experiment is not a
-  required gate on this host.
+- `dkms` is not installed/detected.
+- No external module gate is currently required on this host.
 - Scripts now use repository-local ignored paths by default:
 
   ```text
@@ -21,7 +20,7 @@ Default script target: `7.1.3-kernel-lab`.
   logs/                                build and boot evidence
   ```
 
-## Previous NVIDIA DKMS result
+## Previous external module result
 
 - The Linux 7.1.1 tarball was downloaded to
   an external download directory.
@@ -49,10 +48,9 @@ Default script target: `7.1.3-kernel-lab`.
 - The image and headers packages were installed for testing. Installation
   created `/boot/vmlinuz-7.1.1-kernel-lab`, generated
   `/boot/initrd.img-7.1.1-kernel-lab`, and added a GRUB entry.
-- The image post-installation phase failed because
-  `nvidia-current/550.163.01` could not build for `7.1.1-kernel-lab`. The
-  headers were configured, but the image package was left half-configured
-  (`iF`).
+- The image post-installation phase failed because a required out-of-tree module
+  could not build for `7.1.1-kernel-lab`. The headers were configured, but the
+  image package was left half-configured (`iF`).
 - The custom kernel was removed. GRUB no longer lists it, and the machine was
   returned to a known-good Debian daily kernel.
 
@@ -78,7 +76,7 @@ Default script target: `7.1.3-kernel-lab`.
 7. Build packages as an unprivileged user and save the complete log.
 8. Verify host-specific driver compatibility for the exact kernel. On the
    current Intel-only host, this means at minimum `i915`, storage, network, and
-   boot logs; there is no NVIDIA DKMS gate.
+   boot logs; there is no external module gate at the moment.
 9. In a separate manual step, inspect and install only the new image and needed
    headers. This repository intentionally does not automate installation.
 10. Boot deliberately, run the checklist, and roll back on any material failure.
@@ -90,14 +88,14 @@ daily-kernel acceptance.
 ## Result and lesson learned
 
 The kernel compilation and Debian package generation were successful. The
-blocker was the out-of-tree NVIDIA DKMS module, not the kernel build process.
-Linux `7.1.1-kernel-lab` is unsuitable as the daily kernel on that host
-while Debian NVIDIA `550.163.01` is required.
+blocker was a required out-of-tree module, not the kernel build process.
+Linux `7.1.1-kernel-lab` was unsuitable as the daily kernel on that host while
+that module was required.
 
 A newer upstream kernel can compile and package successfully while remaining
-unusable on a daily system because required out-of-tree DKMS modules—especially
-NVIDIA—may not support its APIs. DKMS compatibility must be proven for the exact
-kernel release before rebooting into it.
+unusable on a daily system because required out-of-tree modules may not support
+its APIs. External module compatibility must be proven for the exact kernel
+release before rebooting into it.
 
 ## Principles
 
