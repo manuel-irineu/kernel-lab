@@ -53,7 +53,7 @@ install.
 ## Graphics
 
 - [ ] Intel remains the desktop renderer and Wayland is stable.
-- [ ] `i915` is loaded and bound to the Intel HD Graphics 530.
+- [ ] `i915` is loaded and bound to the Intel integrated GPU.
 - [ ] Display output, acceleration, suspend/resume, and session switching work.
 - [ ] No NVIDIA/DKMS check is required unless that hardware or driver is added
   later.
