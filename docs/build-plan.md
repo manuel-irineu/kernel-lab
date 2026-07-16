@@ -9,7 +9,6 @@ Default script target: `7.1.3-kernel-lab`.
 
 - The current host runs Debian 13 with a Debian-packaged 6.12 series kernel.
 - Graphics are Intel-only and use the `i915` driver.
-- `dkms` is not installed/detected.
 - No external module gate is currently required on this host.
 - Scripts now use repository-local ignored paths by default:
 
