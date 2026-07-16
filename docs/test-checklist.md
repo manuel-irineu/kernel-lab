@@ -55,8 +55,7 @@ install.
 - [ ] Intel remains the desktop renderer and Wayland is stable.
 - [ ] `i915` is loaded and bound to the Intel integrated GPU.
 - [ ] Display output, acceleration, suspend/resume, and session switching work.
-- [ ] No NVIDIA/DKMS check is required unless that hardware or driver is added
-  later.
+- [ ] No external module check is required unless such a module is added later.
 
 ## Rollback proof
 
