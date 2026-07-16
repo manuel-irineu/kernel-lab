@@ -15,6 +15,7 @@ daily Debian kernel at risk. The workflow:
 - downloads an upstream Linux release and detached signature;
 - verifies the kernel.org GPG signature with the user's existing keyring;
 - prepares an out-of-tree build configuration from the running Debian kernel;
+- disables known NVIDIA/Nouveau options for the current Intel-only host;
 - builds Debian `.deb` packages as an unprivileged user;
 - leaves package installation and boot testing as explicit manual steps.
 
@@ -60,8 +61,8 @@ public documentation.
 | Desktop session | Wayland |
 | External modules | none required |
 
-The current machine uses Intel integrated graphics only. Optional external
-module validation remains host-specific and is not part of the default workflow.
+The current machine uses Intel integrated graphics only. The project does not
+require external graphics modules for this host.
 
 ## Safety guarantees
 
@@ -117,6 +118,19 @@ Run the build workflow:
 The workflow downloads sources, verifies the detached signature, prepares the
 configuration, and runs `make bindeb-pkg`. It does not install the generated
 packages.
+
+Package builds use generic local metadata by default:
+
+```text
+KBUILD_BUILD_USER=kernel-lab
+KBUILD_BUILD_HOST=local-builder
+DEBFULLNAME=Kernel Lab
+DEBEMAIL=kernel-lab@example.invalid
+```
+
+These defaults avoid embedding the local username, hostname, or personal email
+in generated Debian package metadata. Override them explicitly only for private
+local builds where personal metadata is acceptable.
 
 ## Workflow stages
 
