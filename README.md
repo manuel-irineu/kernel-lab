@@ -119,6 +119,16 @@ The workflow downloads sources, verifies the detached signature, prepares the
 configuration, and runs `make bindeb-pkg`. It does not install the generated
 packages.
 
+Inspect generated packages before using them:
+
+```bash
+./scripts/05-inspect-packages.sh
+```
+
+This read-only check reports the generated image and headers package metadata,
+flags known personal metadata markers, and checks the image package for
+NVIDIA/Nouveau-related kernel modules.
+
 Package builds use generic local metadata by default:
 
 ```text
@@ -144,7 +154,8 @@ The staged scripts can be run individually when more control is useful:
 | 3 | `scripts/02-verify-kernel-signature.sh` | verify the detached kernel.org signature |
 | 4 | `scripts/03-prepare-config.sh` | prepare out-of-tree kernel configuration |
 | 5 | `scripts/04-build-deb.sh` | build Debian packages without root |
-| 6 | `scripts/06-post-boot-tests.sh` | collect post-boot evidence after manual testing |
+| 6 | `scripts/05-inspect-packages.sh` | inspect generated package metadata and module contents |
+| 7 | `scripts/06-post-boot-tests.sh` | collect post-boot evidence after manual testing |
 
 Most scripts default to preview mode and require `--execute` before performing
 local write or build actions.
