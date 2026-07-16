@@ -24,17 +24,13 @@ After installing a custom image and headers, inspect the exact target release
 before rebooting:
 
 ```bash
-dkms status
-sudo dkms autoinstall -k <kernel-release>
 grep -R "<kernel-release>" /boot/grub/grub.cfg
 ls -lh /boot | grep "<kernel-release>"
 ```
 
-The DKMS commands are relevant only if this host later has required out-of-tree
-modules. Currently `dkms` is not installed/detected, so the main pre-reboot
-gate is package state, GRUB/initramfs presence, and known-good Debian fallback.
-Do not reboot into the custom kernel if any required module fails to build or
-install.
+The main pre-reboot gate is package state, GRUB/initramfs presence, and
+known-good Debian fallback. Do not reboot into the custom kernel if any required
+host-specific component fails to build, install, or initialize.
 
 ## Identity and recovery
 
