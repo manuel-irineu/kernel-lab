@@ -58,11 +58,10 @@ public documentation.
 | Wi-Fi | Intel wireless, driver `iwlwifi` |
 | Audio | Intel HD Audio, driver `snd_hda_intel` |
 | Desktop session | Wayland |
-| Out-of-tree modules | no `dkms` command detected |
+| Out-of-tree modules | none detected |
 
-The current machine uses Intel integrated graphics only. The previous NVIDIA
-DKMS compatibility blocker is preserved in the documentation as historical
-context, but it is not a release gate for this host.
+The current machine uses Intel integrated graphics only. Optional external
+module validation remains generic and host-specific.
 
 ## Safety guarantees
 
@@ -170,8 +169,7 @@ installed, visible in GRUB, and documented as the rollback target.
 
 ## Historical note
 
-An earlier laptop experiment successfully built Linux
-`7.1.1-kernel-lab` as Debian packages, but the kernel was rejected for daily use
-because NVIDIA `nvidia-current/550.163.01` failed to build through DKMS for that
-kernel. That failure is documented under `docs/nvidia-dkms-validation.md` and is
-treated as host-specific historical context.
+An earlier experiment showed that a successful kernel package build does not
+automatically make a custom kernel suitable for daily use. Required external
+modules, boot behavior, graphics, storage, network, and rollback paths must be
+validated for the exact target kernel before adoption.
