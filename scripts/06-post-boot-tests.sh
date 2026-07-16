@@ -4,9 +4,8 @@
 
 set -euo pipefail
 
-readonly REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-readonly LOG_DIR="${REPO_ROOT}/logs"
-readonly EXPECTED_PREFIX='7.1.1'
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/kernel-lab-env.sh"
+readonly EXPECTED_PREFIX="${EXPECTED_PREFIX:-${KERNEL_VERSION}}"
 
 # Warn instead of aborting because collecting evidence on the rollback kernel is
 # also useful when diagnosing a failed lab-kernel boot.

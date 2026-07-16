@@ -1,19 +1,20 @@
 # Debian 13 Linux Kernel Lab
 
 This repository documents a safe, reversible experiment to build upstream
-Linux 7.1.1 as Debian packages on an ASUS VivoBook X512FJ running Debian 13.
+Linux kernels as Debian packages on Debian 13.
 
 The lab does **not** replace the distribution kernel. The working
-`6.12.94+deb13-amd64` kernel must remain installed and selectable from GRUB.
+Debian kernel must remain installed and selectable from GRUB.
 
 ## Experiment status
 
-Linux `7.1.1-kernel-lab` compiled successfully and produced Debian packages.
-The image and headers were installed for testing, but NVIDIA
-`nvidia-current/550.163.01` failed to build through DKMS for that kernel. The
-custom image package was left half-configured, so Linux 7.1.1 was not accepted
-for daily use. The custom kernel was removed and the notebook was returned to
-the Debian `6.12.94+deb13-amd64` daily kernel.
+The previous ASUS VivoBook experiment proved that Linux `7.1.1-kernel-lab`
+could compile and package, but it was blocked by NVIDIA DKMS compatibility.
+
+The current host is `pchome`, running Debian 13.6 with kernel
+`6.12.95+deb13-amd64` and Intel HD Graphics 530 through `i915`. No NVIDIA GPU,
+`nvidia-smi`, or DKMS registration is present in the current baseline, so the
+NVIDIA-specific gate is archival rather than mandatory for this machine.
 
 ## Safety model
 
@@ -21,29 +22,45 @@ the Debian `6.12.94+deb13-amd64` daily kernel.
 - Never automate `sudo`, package installation, `dpkg`, GRUB, initramfs, DKMS,
   or reboot operations.
 - Review every printed privileged command before running it manually.
-- Treat NVIDIA DKMS support as a required validation gate.
-- Keep Intel as the desktop renderer and test the NVIDIA MX230 separately.
+- Treat out-of-tree modules as optional host-specific gates. On the current
+  Intel-only host, there is no NVIDIA DKMS gate.
+- Keep Intel `i915` graphics as the recovery path.
 - Keep source, packages, logs, and build output in ignored directories.
 
 No kernel source or generated package is stored in this repository.
 
 ## Layout and workflow
 
-- `docs/` contains the build, rollback, DKMS, and test procedures.
+- `docs/` contains the build, rollback, historical DKMS, and test procedures.
 - `scripts/` contains staged helpers. Mutating helpers preview their work unless
   explicitly invoked with `--execute`.
 - Ignored `workspace/`, `artifacts/`, and `logs/` directories hold local data.
 
 Read `docs/rollback.md` first, then follow `docs/build-plan.md`. Use
-`docs/nvidia-dkms-validation.md` before trusting the lab kernel and
 `docs/test-checklist.md` after any future boot. The scripts deliberately stop
 short of installing generated packages.
 
-## Suggested next experiment
+## Current build path
 
-- Prefer a newer `6.12.x` longterm kernel or another Debian-supported kernel
-  before attempting kernel 7.x again on this daily notebook.
-- Treat successful NVIDIA DKMS compilation for the exact target release as a
-  release gate, not as a post-boot test.
-- Test risky DKMS compatibility patches only in a disposable virtual machine or
-  another non-daily environment.
+Preview the complete unprivileged build workflow:
+
+```bash
+./scripts/10-build-kernel-packages.sh
+```
+
+Run it only after reviewing the dependency and rollback docs. The workflow
+downloads the tarball/signature, verifies the detached GPG signature using your
+existing keyring, prepares the config, and builds `.deb` packages:
+
+```bash
+./scripts/10-build-kernel-packages.sh --execute
+```
+
+The default target remains `7.1.1-kernel-lab`, but the scripts are portable:
+
+```bash
+KERNEL_VERSION=7.1.1 LOCAL_VERSION=-kernel-lab ./scripts/10-build-kernel-packages.sh --execute
+```
+
+Generated source, build output, downloads, and logs stay under ignored local
+directories in this repository.

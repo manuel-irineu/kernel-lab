@@ -4,11 +4,7 @@
 
 set -euo pipefail
 
-readonly VERSION='7.1.1'
-readonly BUILD_ROOT='/home/manuel/build/kernel'
-readonly SOURCE_DIR="${BUILD_ROOT}/src/linux-${VERSION}"
-readonly BUILD_DIR="${BUILD_ROOT}/build/linux-${VERSION}"
-readonly LOG_DIR="${BUILD_ROOT}/logs"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/kernel-lab-env.sh"
 readonly JOBS="${JOBS:-$(nproc)}"
 
 # Require explicit opt-in before starting the resource-intensive build.
@@ -21,10 +17,10 @@ Log directory: ${LOG_DIR}
 Parallel jobs: ${JOBS}
 
 Execution runs make bindeb-pkg as an unprivileged user and captures its log.
-It does not run dpkg, DKMS, initramfs, GRUB, sudo, or reboot commands.
+It does not run dpkg, initramfs, GRUB, sudo, or reboot commands.
 
 Generated .deb files are expected near:
-${BUILD_ROOT}/src
+${BUILD_PARENT}
 or the parent directory used by the kernel build system.
 EOF
     exit 0
@@ -51,15 +47,15 @@ mkdir -p "$LOG_DIR"
 # PIPESTATUS preserves make's result rather than hiding it behind tee.
 set +e
 make -C "$SOURCE_DIR" O="$BUILD_DIR" -j"$JOBS" bindeb-pkg 2>&1 \
-    | tee "$LOG_DIR/build-linux-${VERSION}.log"
+    | tee "$LOG_DIR/build-linux-${KERNEL_VERSION}.log"
 status=${PIPESTATUS[0]}
 set -e
 
 (( status == 0 )) || {
     printf 'Build failed with status %d.\n' "$status" >&2
-    printf 'Review log: %s/build-linux-%s.log\n' "$LOG_DIR" "$VERSION" >&2
+    printf 'Review log: %s/build-linux-%s.log\n' "$LOG_DIR" "$KERNEL_VERSION" >&2
     exit "$status"
 }
 
 printf 'Build completed; inspect generated .deb files. None were installed.\n'
-printf 'Build log: %s/build-linux-%s.log\n' "$LOG_DIR" "$VERSION"
+printf 'Build log: %s/build-linux-%s.log\n' "$LOG_DIR" "$KERNEL_VERSION"

@@ -1,19 +1,11 @@
 #!/usr/bin/env bash
 # Prepare an out-of-tree config based on the running Debian kernel.
 # Preview is the default; --execute performs only unprivileged writes under
-# /home/manuel/build/kernel.
+# the repository workspace.
 
 set -euo pipefail
 
-readonly VERSION='7.1.1'
-readonly LOCAL_VERSION='-kernel-lab'
-readonly DOWNLOAD_DIR='/home/manuel/Downloads/kernel'
-readonly BUILD_ROOT='/home/manuel/build/kernel'
-readonly SOURCE_PARENT="${BUILD_ROOT}/src"
-readonly SOURCE_DIR="${SOURCE_PARENT}/linux-${VERSION}"
-readonly BUILD_DIR="${BUILD_ROOT}/build/linux-${VERSION}"
-readonly TARBALL="${DOWNLOAD_DIR}/linux-${VERSION}.tar.xz"
-readonly RUNNING_CONFIG="/boot/config-$(uname -r)"
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/kernel-lab-env.sh"
 
 # Configuration writes require an explicit opt-in, even though they stay local.
 if [[ ${1:-} != '--execute' ]]; then
@@ -28,7 +20,7 @@ Local suffix: ${LOCAL_VERSION}
 
 Execution will:
 - create ${SOURCE_PARENT} if needed;
-- extract linux-${VERSION}.tar.xz if ${SOURCE_DIR} does not exist;
+- extract linux-${KERNEL_VERSION}.tar.xz if ${SOURCE_DIR} does not exist;
 - create ${BUILD_DIR};
 - copy the running Debian kernel config to ${BUILD_DIR}/.config;
 - set CONFIG_LOCALVERSION=${LOCAL_VERSION};

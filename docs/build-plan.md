@@ -1,9 +1,28 @@
 # Build Plan
 
-Target: upstream Linux `7.1.1` as Debian `.deb` packages, installed alongside,
-not instead of, the working Debian kernel.
+Target: upstream Linux as Debian `.deb` packages, installed alongside, not
+instead of, the working Debian kernel.
 
-## Current progress
+Default script target: `7.1.1-kernel-lab`.
+
+## Current progress on the new host
+
+- Host `pchome` runs Debian 13.6 with Debian kernel
+  `6.12.95+deb13-amd64`.
+- Graphics are Intel-only: Intel HD Graphics 530 with the `i915` driver.
+- `dkms` and `nvidia-smi` are not installed/detected.
+- The previous NVIDIA DKMS blocker from the ASUS VivoBook is therefore not a
+  required gate on this host.
+- Scripts now use repository-local ignored paths by default:
+
+  ```text
+  workspace/downloads/                 tarball and signature
+  workspace/build/src/linux-<version>/ extracted source
+  workspace/build/out/linux-<version>/ out-of-tree build data
+  logs/                                build and boot evidence
+  ```
+
+## Previous ASUS VivoBook result
 
 - The Linux 7.1.1 tarball was downloaded to
   `/home/manuel/Downloads/kernel`.
@@ -44,15 +63,22 @@ not instead of, the working Debian kernel.
 2. Review the rollback procedure and identify the working GRUB entry.
 3. Preview `scripts/01-install-build-deps.sh`; manually review its printed
    command. The script never runs it.
-4. Source acquisition and detached-signature verification are complete.
-5. The out-of-tree configuration was prepared from
+4. Preview or run `scripts/10-build-kernel-packages.sh`. Preview is the
+   default; `--execute` downloads, verifies the detached GPG signature, prepares
+   config, and builds packages without root.
+5. Signature verification requires the kernel.org signer key to already exist
+   in the user's GPG keyring. The scripts do not import or trust keys
+   automatically.
+6. The out-of-tree configuration is prepared from
    `/boot/config-$(uname -r)`, and `olddefconfig` completed with non-fatal
    warnings. Review the resulting configuration before building.
-6. Build packages as an unprivileged user and save the complete log.
-7. Verify driver compatibility and NVIDIA DKMS results for the exact kernel.
-8. In a separate manual step, inspect and install only the new image and needed
+7. Build packages as an unprivileged user and save the complete log.
+8. Verify host-specific driver compatibility for the exact kernel. On the
+   current Intel-only host, this means at minimum `i915`, storage, network, and
+   boot logs; there is no NVIDIA DKMS gate.
+9. In a separate manual step, inspect and install only the new image and needed
    headers. This repository intentionally does not automate installation.
-9. Boot deliberately, run the checklist, and roll back on any material failure.
+10. Boot deliberately, run the checklist, and roll back on any material failure.
 
 For this experiment, stage 6 succeeded. Stage 7 failed before the custom kernel
 was booted, so stages 8 and 9 ended in package cleanup and rollback rather than
@@ -78,10 +104,11 @@ kernel release before rebooting into it.
 - Inspect generated packages before any future installation.
 - Never remove the known-good Debian kernel.
 
-Current local paths:
+Current local paths use repository-local ignored directories:
 
 ```text
-/home/manuel/Downloads/kernel/                    tarball and signature
-/home/manuel/build/kernel/src/linux-7.1.1/        extracted source
-/home/manuel/build/kernel/build/linux-7.1.1/      out-of-tree build data
+workspace/downloads/                 tarball and signature
+workspace/build/src/linux-<version>/ extracted source
+workspace/build/out/linux-<version>/ out-of-tree build data
+logs/                                build and boot evidence
 ```

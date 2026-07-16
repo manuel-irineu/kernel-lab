@@ -1,7 +1,11 @@
-# NVIDIA DKMS Validation
+# Historical NVIDIA DKMS Validation
 
-The NVIDIA MX230 serves Ollama workloads. A successful Linux package build does
-not prove that the proprietary NVIDIA module compiles, loads, or works.
+This page records the previous ASUS VivoBook failure. It is not a mandatory
+gate for the current Intel-only host, where no NVIDIA GPU, `nvidia-smi`, or
+`dkms` command is present.
+
+On a host with NVIDIA hardware, a successful Linux package build does not prove
+that the proprietary NVIDIA module compiles, loads, or works.
 
 ## Risks
 

@@ -1,23 +1,22 @@
 # Post-Boot Test Checklist
 
-Use this after a future deliberate boot of the lab kernel. Capture read-only
-evidence with `scripts/06-post-boot-tests.sh` under ignored `logs/`.
+Use this after a future deliberate boot of the lab kernel on the current
+Intel-only host. Capture read-only evidence with `scripts/06-post-boot-tests.sh`
+under ignored `logs/`.
 
-## Preparation completed
+## Preparation for the current host
 
-- [x] The Linux 7.1.1 tarball was downloaded to
-  `/home/manuel/Downloads/kernel`.
-- [x] The detached signature was verified with Greg Kroah-Hartman's key,
-  fingerprint `647F 2865 4894 E3BD 4571  99BE 38DB BDC8 6092 693E`.
-- [x] The source was extracted to
-  `/home/manuel/build/kernel/src/linux-7.1.1`.
-- [x] The out-of-tree build directory was created at
-  `/home/manuel/build/kernel/build/linux-7.1.1`.
-- [x] The running config was copied from `/boot/config-$(uname -r)`.
-- [x] `olddefconfig` completed successfully with non-fatal warnings.
-- [x] The final kernel release was configured as `7.1.1-kernel-lab`.
-- [x] `make bindeb-pkg` generated the image, headers, libc headers, and debug
-  image packages.
+- [ ] `scripts/00-check-system.sh` was saved under `logs/`.
+- [ ] The Linux tarball and detached signature were downloaded under
+  `workspace/downloads/`.
+- [ ] The detached signature was verified by
+  `scripts/02-verify-kernel-signature.sh --execute`.
+- [ ] The source was extracted under `workspace/build/src/`.
+- [ ] The out-of-tree build directory was created under `workspace/build/out/`.
+- [ ] The running config was copied from `/boot/config-$(uname -r)`.
+- [ ] `olddefconfig` completed successfully.
+- [ ] The final kernel release includes the configured `LOCAL_VERSION`.
+- [ ] `make bindeb-pkg` generated image and headers packages.
 
 ## Mandatory pre-reboot gate
 
@@ -31,18 +30,15 @@ grep -R "<kernel-release>" /boot/grub/grub.cfg
 ls -lh /boot | grep "<kernel-release>"
 ```
 
-The DKMS autoinstall command changes system state and must be run manually only
-after reviewing the target release. **Do not reboot into the custom kernel if
-any required DKMS module fails to build or install.** A generated image,
-initramfs, and GRUB entry do not prove that NVIDIA is compatible.
-
-For `7.1.1-kernel-lab`, NVIDIA `550.163.01` failed this gate during package
-post-installation. The image package remained half-configured, the custom kernel
-was removed, and no post-boot acceptance test was performed.
+The DKMS commands are relevant only if this host later has required out-of-tree
+modules. Currently `dkms` is not installed/detected, so the main pre-reboot
+gate is package state, GRUB/initramfs presence, and known-good Debian fallback.
+Do not reboot into the custom kernel if any required module fails to build or
+install.
 
 ## Identity and recovery
 
-- [ ] `uname -r` reports exactly `7.1.1-kernel-lab`.
+- [ ] `uname -r` reports the intended lab kernel release.
 - [ ] The Debian kernel still appears in `/boot` and GRUB.
 - [ ] The Wayland session starts normally.
 - [ ] Logs contain no unexplained panic, oops, lockup, or module failure.
@@ -54,12 +50,13 @@ was removed, and no post-boot acceptance test was performed.
 - [ ] Wi-Fi, Bluetooth, and suspend/resume work.
 - [ ] Battery, charging, thermals, and fan behavior are plausible.
 
-## Graphics and compute
+## Graphics
 
 - [ ] Intel remains the desktop renderer and Wayland is stable.
-- [ ] NVIDIA modules exist for this exact kernel and load cleanly.
-- [ ] `nvidia-smi` detects the MX230.
-- [ ] A small Ollama test completes on the NVIDIA GPU.
+- [ ] `i915` is loaded and bound to the Intel HD Graphics 530.
+- [ ] Display output, acceleration, suspend/resume, and session switching work.
+- [ ] No NVIDIA/DKMS check is required unless that hardware or driver is added
+  later.
 
 ## Rollback proof
 

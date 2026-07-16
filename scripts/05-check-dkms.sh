@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-# Read-only NVIDIA and DKMS inventory. It does not build DKMS modules or change
-# the loaded module set.
+# Read-only external module inventory. It does not build DKMS modules or change
+# the loaded module set. On Intel-only hosts, missing DKMS/NVIDIA tools are
+# expected and reported without failing the script.
 
 set -euo pipefail
 
-# NVIDIA utilities may not all be installed. Missing probes are reported without
-# turning this inventory helper into an installer or repair tool.
+# Optional utilities may not all be installed. Missing probes are reported
+# without turning this inventory helper into an installer or repair tool.
 run_optional() {
     local description=$1
     shift
@@ -18,7 +19,7 @@ run_optional() {
 }
 
 # These commands query current state only; none load, unload, build, or sign.
-printf '# NVIDIA/DKMS snapshot for %s\n' "$(uname -r)"
+printf '# External module snapshot for %s\n' "$(uname -r)"
 run_optional 'DKMS registrations' dkms status
 run_optional 'NVIDIA report' nvidia-smi
 run_optional 'NVIDIA module metadata' modinfo -k "$(uname -r)" nvidia

@@ -13,7 +13,7 @@ Review this command and run it manually only if appropriate for this host:
 
 sudo apt install build-essential bc bison flex libssl-dev libelf-dev \
   libdw-dev libncurses-dev dwarves fakeroot rsync debhelper cpio kmod xz-utils \
-  zstd dkms wget gnupg
+  zstd wget gnupg
 
 No sudo command was executed.
 EOF
