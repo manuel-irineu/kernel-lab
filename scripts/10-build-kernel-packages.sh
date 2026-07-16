@@ -25,7 +25,7 @@ Execution will run:
 3. scripts/03-prepare-config.sh --execute
 4. scripts/04-build-deb.sh --execute
 
-It will not run sudo, apt, dpkg, initramfs, GRUB, DKMS, or reboot commands.
+It will not run sudo, apt, dpkg, initramfs, GRUB, or reboot commands.
 Install generated packages manually only after reviewing them and the rollback
 plan.
 EOF
