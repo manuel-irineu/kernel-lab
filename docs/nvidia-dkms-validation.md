@@ -1,6 +1,6 @@
 # Historical NVIDIA DKMS Validation
 
-This page records the previous ASUS VivoBook failure. It is not a mandatory
+This page records the previous NVIDIA DKMS failure. It is not a mandatory
 gate for the current Intel-only host, where no NVIDIA GPU, `nvidia-smi`, or
 `dkms` command is present.
 
@@ -25,7 +25,7 @@ workload on the working kernel.
 - DKMS reports NVIDIA built and installed for that exact release.
 - `modinfo -k "$(uname -r)" nvidia` succeeds.
 - Expected NVIDIA modules load without kernel errors.
-- `nvidia-smi` detects the MX230.
+- `nvidia-smi` detects the NVIDIA GPU.
 - Intel still renders the Wayland desktop.
 - A small reproducible Ollama inference uses the NVIDIA GPU.
 
@@ -60,5 +60,5 @@ enough to build, while NVIDIA 550.163.01 was incompatible with the target
 kernel APIs.
 
 The custom kernel was removed without forcing NVIDIA installation or ignoring
-the DKMS failure. NVIDIA `550.163.01` remains usable with the Debian 6.12 daily
-kernels, including `6.12.94+deb13-amd64`.
+the DKMS failure. NVIDIA `550.163.01` remained usable with the known-good Debian
+6.12 daily kernels on that host.
