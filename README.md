@@ -58,10 +58,10 @@ public documentation.
 | Wi-Fi | Intel wireless, driver `iwlwifi` |
 | Audio | Intel HD Audio, driver `snd_hda_intel` |
 | Desktop session | Wayland |
-| Out-of-tree modules | none detected |
+| External modules | none required |
 
 The current machine uses Intel integrated graphics only. Optional external
-module validation remains generic and host-specific.
+module validation remains host-specific and is not part of the default workflow.
 
 ## Safety guarantees
 
@@ -72,7 +72,7 @@ Repository scripts follow these rules:
 - no `dpkg` package installation or removal;
 - no GRUB updates;
 - no initramfs updates;
-- no DKMS build or module installation;
+- no external module build or installation;
 - no reboot operation;
 - no writes outside ignored local workspace/log directories during the build
   workflow.
@@ -130,8 +130,7 @@ The staged scripts can be run individually when more control is useful:
 | 3 | `scripts/02-verify-kernel-signature.sh` | verify the detached kernel.org signature |
 | 4 | `scripts/03-prepare-config.sh` | prepare out-of-tree kernel configuration |
 | 5 | `scripts/04-build-deb.sh` | build Debian packages without root |
-| 6 | `scripts/05-check-dkms.sh` | collect optional external module inventory |
-| 7 | `scripts/06-post-boot-tests.sh` | collect post-boot evidence after manual testing |
+| 6 | `scripts/06-post-boot-tests.sh` | collect post-boot evidence after manual testing |
 
 Most scripts default to preview mode and require `--execute` before performing
 local write or build actions.
