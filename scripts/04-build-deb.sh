@@ -6,6 +6,10 @@ set -euo pipefail
 
 source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/kernel-lab-env.sh"
 readonly JOBS="${JOBS:-$(nproc)}"
+export KBUILD_BUILD_USER="${KBUILD_BUILD_USER:-kernel-lab}"
+export KBUILD_BUILD_HOST="${KBUILD_BUILD_HOST:-local-builder}"
+export DEBFULLNAME="${DEBFULLNAME:-Kernel Lab}"
+export DEBEMAIL="${DEBEMAIL:-kernel-lab@example.invalid}"
 
 # Require explicit opt-in before starting the resource-intensive build.
 if [[ ${1:-} != '--execute' ]]; then
@@ -15,6 +19,9 @@ Source: ${SOURCE_DIR}
 Build: ${BUILD_DIR}
 Log directory: ${LOG_DIR}
 Parallel jobs: ${JOBS}
+Build user: ${KBUILD_BUILD_USER}
+Build host: ${KBUILD_BUILD_HOST}
+Debian maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
 
 Execution runs make bindeb-pkg as an unprivileged user and captures its log.
 It does not run dpkg, initramfs, GRUB, sudo, or reboot commands.
