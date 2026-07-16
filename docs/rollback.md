@@ -7,8 +7,7 @@ Rollback is a prerequisite, not a cleanup task.
 - Confirm the Debian kernel image and matching initramfs exist in `/boot`.
 - Confirm its package is installed and is not marked for removal.
 - Know how to open GRUB and select **Advanced options for Debian GNU/Linux**, then
-  choose the daily `6.12.95+deb13-amd64` kernel or another known-good Debian
-  kernel.
+  choose the daily Debian kernel or another known-good Debian kernel.
 - Keep important data backed up outside this experiment.
 - Stop if the known-good entry cannot be identified.
 
@@ -52,9 +51,5 @@ These are manual recovery commands, not commands executed by repository
 scripts. Inspect the output after each step. Do not force module installation,
 bypass DKMS errors, or delete generated build artifacts as part of rollback.
 
-After cleanup, GRUB no longer listed `7.1.1-kernel-lab`. The following stable
-Debian kernels remained available:
-
-- `6.12.94+deb13-amd64`
-- `6.12.90+deb13.1-amd64`
-- `6.12.86+deb13-amd64`
+After cleanup, GRUB no longer listed `7.1.1-kernel-lab`, and known-good Debian
+kernels remained available.
