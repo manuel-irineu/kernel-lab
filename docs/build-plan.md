@@ -5,13 +5,12 @@ instead of, the working Debian kernel.
 
 Default script target: `7.1.3-kernel-lab`.
 
-## Current progress on the new host
+## Current progress on the current host
 
-- Host `pchome` runs Debian 13.6 with Debian kernel
-  `6.12.95+deb13-amd64`.
-- Graphics are Intel-only: Intel HD Graphics 530 with the `i915` driver.
+- The current host runs Debian 13 with a Debian-packaged 6.12 series kernel.
+- Graphics are Intel-only and use the `i915` driver.
 - `dkms` and `nvidia-smi` are not installed/detected.
-- The previous NVIDIA DKMS blocker from the ASUS VivoBook is therefore not a
+- The previous NVIDIA DKMS blocker from an earlier laptop experiment is not a
   required gate on this host.
 - Scripts now use repository-local ignored paths by default:
 
@@ -22,17 +21,17 @@ Default script target: `7.1.3-kernel-lab`.
   logs/                                build and boot evidence
   ```
 
-## Previous ASUS VivoBook result
+## Previous NVIDIA DKMS result
 
 - The Linux 7.1.1 tarball was downloaded to
-  `/home/manuel/Downloads/kernel`.
+  an external download directory.
 - The detached signature was verified successfully with Greg Kroah-Hartman's
   signing key. The verified fingerprint is
   `647F 2865 4894 E3BD 4571  99BE 38DB BDC8 6092 693E`.
 - The source was extracted to
-  `/home/manuel/build/kernel/src/linux-7.1.1`.
+  a local build source directory.
 - The out-of-tree build directory is
-  `/home/manuel/build/kernel/build/linux-7.1.1`.
+  a local out-of-tree build directory.
 - The running Debian kernel configuration was copied from
   `/boot/config-$(uname -r)`.
 - `olddefconfig` completed successfully. It emitted non-fatal warnings that
@@ -41,10 +40,10 @@ Default script target: `7.1.3-kernel-lab`.
 - `make bindeb-pkg` completed successfully and generated:
 
   ```text
-  /home/manuel/build/kernel/build/linux-image-7.1.1-kernel-lab_7.1.1-2_amd64.deb
-  /home/manuel/build/kernel/build/linux-headers-7.1.1-kernel-lab_7.1.1-2_amd64.deb
-  /home/manuel/build/kernel/build/linux-libc-dev_7.1.1-2_amd64.deb
-  /home/manuel/build/kernel/build/linux-image-7.1.1-kernel-lab-dbg_7.1.1-2_amd64.deb
+  linux-image-7.1.1-kernel-lab_7.1.1-2_amd64.deb
+  linux-headers-7.1.1-kernel-lab_7.1.1-2_amd64.deb
+  linux-libc-dev_7.1.1-2_amd64.deb
+  linux-image-7.1.1-kernel-lab-dbg_7.1.1-2_amd64.deb
   ```
 
 - The image and headers packages were installed for testing. Installation
@@ -54,8 +53,8 @@ Default script target: `7.1.3-kernel-lab`.
   `nvidia-current/550.163.01` could not build for `7.1.1-kernel-lab`. The
   headers were configured, but the image package was left half-configured
   (`iF`).
-- The custom kernel was removed. GRUB no longer lists it, and the notebook is
-  back on the Debian `6.12.94+deb13-amd64` daily kernel.
+- The custom kernel was removed. GRUB no longer lists it, and the machine was
+  returned to a known-good Debian daily kernel.
 
 ## Stages
 
@@ -92,7 +91,7 @@ daily-kernel acceptance.
 
 The kernel compilation and Debian package generation were successful. The
 blocker was the out-of-tree NVIDIA DKMS module, not the kernel build process.
-Linux `7.1.1-kernel-lab` is unsuitable as the daily kernel on this notebook
+Linux `7.1.1-kernel-lab` is unsuitable as the daily kernel on that host
 while Debian NVIDIA `550.163.01` is required.
 
 A newer upstream kernel can compile and package successfully while remaining
