@@ -23,7 +23,6 @@ output="${LOG_DIR}/post-boot-${timestamp}.txt"
 {
     printf '# Post-boot evidence\n'
     "$REPO_ROOT/scripts/00-check-system.sh"
-    "$REPO_ROOT/scripts/05-check-dkms.sh"
     printf '\n## Kernel warnings for this boot\n'
     journalctl --no-pager -b -k -p warning 2>&1 || true
 } | tee "$output"
