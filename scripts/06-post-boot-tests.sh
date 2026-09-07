@@ -23,6 +23,17 @@ output="${LOG_DIR}/post-boot-${timestamp}.txt"
 {
     printf '# Post-boot evidence\n'
     "$REPO_ROOT/scripts/00-check-system.sh"
+    printf '\n## Graphics driver gate\n'
+    if lsmod | grep -Eq '^i915[[:space:]]'; then
+        printf 'OK: i915 is loaded for Intel graphics.\n'
+    else
+        printf 'WARN: i915 is not loaded; verify Intel graphics before daily use.\n'
+    fi
+    if lsmod | grep -Eq '^nvidia(_|[[:space:]])'; then
+        printf 'WARN: proprietary NVIDIA module is loaded; this host baseline expects none.\n'
+    else
+        printf 'OK: no proprietary NVIDIA kernel module is loaded.\n'
+    fi
     printf '\n## Kernel warnings for this boot\n'
     journalctl --no-pager -b -k -p warning 2>&1 || true
 } | tee "$output"
