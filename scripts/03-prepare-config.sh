@@ -26,7 +26,7 @@ Execution will:
 - set CONFIG_LOCALVERSION=${LOCAL_VERSION};
 - disable CONFIG_LOCALVERSION_AUTO;
 - clear Debian-specific trusted/revocation key paths;
-- disable NVIDIA/Nouveau kernel options for this Intel-only lab host;
+- disable NVIDIA/Nouveau kernel options for this Intel-primary lab host;
 - run olddefconfig.
 
 No sudo command will be executed.
