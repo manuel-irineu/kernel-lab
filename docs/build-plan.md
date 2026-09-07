@@ -3,12 +3,14 @@
 Target: upstream Linux as Debian `.deb` packages, installed alongside, not
 instead of, the working Debian kernel.
 
-Default script target: `7.1.3-kernel-lab`.
+Default script target: `7.1.13-kernel-lab`.
 
 ## Current progress on the current host
 
-- The current host runs Debian 13 with a Debian-packaged 6.12 series kernel.
-- Graphics are Intel-only and use the `i915` driver.
+- The current host runs Debian forky/sid with Debian-packaged
+  `7.1.12+deb14-amd64`.
+- Graphics are Intel-primary using `i915`; an NVIDIA GeForce MX230 is present
+  but the proprietary NVIDIA driver is not installed.
 - No external module gate is currently required on this host.
 - Scripts now use repository-local ignored paths by default:
 
@@ -74,8 +76,9 @@ Default script target: `7.1.3-kernel-lab`.
    warnings. Review the resulting configuration before building.
 7. Build packages as an unprivileged user and save the complete log.
 8. Verify host-specific driver compatibility for the exact kernel. On the
-   current Intel-only host, this means at minimum `i915`, storage, network, and
-   boot logs; there is no external module gate at the moment.
+   current Intel-primary host, this means at minimum `i915`, absence of
+   proprietary NVIDIA modules, storage, network, and boot logs; there is no
+   external module gate at the moment.
 9. In a separate manual step, inspect and install only the new image and needed
    headers. This repository intentionally does not automate installation.
 10. Boot deliberately, run the checklist, and roll back on any material failure.
