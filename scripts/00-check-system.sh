@@ -27,6 +27,17 @@ run_optional 'Boot command line' cat /proc/cmdline
 run_optional 'PCI devices and drivers' lspci -nnk
 run_optional 'Session type' printenv XDG_SESSION_TYPE
 run_optional 'Loaded modules' lsmod
+printf '\n## Graphics policy check\n'
+if command -v lsmod >/dev/null 2>&1 && lsmod | grep -Eq '^i915[[:space:]]'; then
+    printf 'OK: i915 is loaded for Intel graphics.\n'
+else
+    printf 'WARN: i915 is not loaded; verify Intel graphics before kernel testing.\n'
+fi
+if command -v lsmod >/dev/null 2>&1 && lsmod | grep -Eq '^nvidia(_|[[:space:]])'; then
+    printf 'WARN: proprietary NVIDIA module is loaded; this host baseline expects none.\n'
+else
+    printf 'OK: no proprietary NVIDIA kernel module is loaded.\n'
+fi
 run_optional 'Disk usage' df -h
 run_optional 'Memory' free -h
 printf '\nNo settings were changed. Save output under logs/ if needed.\n'
