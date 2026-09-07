@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Print, but never execute, a suggested Debian build dependency command. The
-# package list must be reviewed by the user against current Debian 13 metadata.
+# package list must be reviewed by the user against current Debian metadata.
 
 set -euo pipefail
 
