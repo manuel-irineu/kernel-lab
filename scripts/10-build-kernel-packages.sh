@@ -25,6 +25,10 @@ Execution will run:
 3. scripts/03-prepare-config.sh --execute
 4. scripts/04-build-deb.sh --execute
 
+If the tarball already exists locally, the download stage exits without
+replacing it. Signature verification remains required unless
+SKIP_KERNEL_SIGNATURE=1 is set explicitly.
+
 It will not run sudo, apt, dpkg, initramfs, GRUB, or reboot commands.
 Install generated packages manually only after reviewing them and the rollback
 plan.
