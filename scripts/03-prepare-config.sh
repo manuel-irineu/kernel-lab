@@ -20,7 +20,7 @@ Local suffix: ${LOCAL_VERSION}
 
 Execution will:
 - create ${SOURCE_PARENT} if needed;
-- extract linux-${KERNEL_VERSION}.tar.xz if ${SOURCE_DIR} does not exist;
+- extract $(basename "$TARBALL") if ${SOURCE_DIR} does not exist;
 - create ${BUILD_DIR};
 - copy the running Debian kernel config to ${BUILD_DIR}/.config;
 - set CONFIG_LOCALVERSION=${LOCAL_VERSION};
