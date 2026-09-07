@@ -1,8 +1,8 @@
 # Post-Boot Test Checklist
 
 Use this after a future deliberate boot of the lab kernel on the current
-Intel-only host. Capture read-only evidence with `scripts/06-post-boot-tests.sh`
-under ignored `logs/`.
+Intel-primary host. Capture read-only evidence with
+`scripts/06-post-boot-tests.sh` under ignored `logs/`.
 
 ## Preparation for the current host
 
@@ -50,6 +50,8 @@ host-specific component fails to build, install, or initialize.
 
 - [ ] Intel remains the desktop renderer and Wayland is stable.
 - [ ] `i915` is loaded and bound to the Intel integrated GPU.
+- [ ] No proprietary NVIDIA kernel module is loaded.
+- [ ] The NVIDIA dGPU is not required for display, acceleration, or resume.
 - [ ] Display output, acceleration, suspend/resume, and session switching work.
 - [ ] No external module check is required unless such a module is added later.
 
