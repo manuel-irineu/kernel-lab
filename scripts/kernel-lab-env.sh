@@ -5,7 +5,7 @@
 set -euo pipefail
 
 readonly REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-readonly KERNEL_VERSION="${KERNEL_VERSION:-7.1.3}"
+readonly KERNEL_VERSION="${KERNEL_VERSION:-7.1.13}"
 readonly LOCAL_VERSION="${LOCAL_VERSION:--kernel-lab}"
 readonly KERNEL_MAJOR="${KERNEL_VERSION%%.*}"
 readonly KERNEL_SERIES="${KERNEL_SERIES:-v${KERNEL_MAJOR}.x}"
