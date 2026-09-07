@@ -1,7 +1,7 @@
 # Debian Kernel Build Lab
 
 Safe, reproducible tooling for building upstream Linux kernels as Debian
-packages on Debian 13.
+packages on Debian-derived systems.
 
 This project is intentionally conservative: it builds custom kernel packages
 alongside the distribution kernel and does not automate installation, GRUB
@@ -15,7 +15,7 @@ daily Debian kernel at risk. The workflow:
 - downloads an upstream Linux release and detached signature;
 - verifies the kernel.org GPG signature with the user's existing keyring;
 - prepares an out-of-tree build configuration from the running Debian kernel;
-- disables known NVIDIA/Nouveau options for the current Intel-only host;
+- disables known NVIDIA/Nouveau options for the current Intel-primary host;
 - builds Debian `.deb` packages as an unprivileged user;
 - leaves package installation and boot testing as explicit manual steps.
 
@@ -27,13 +27,13 @@ repository.
 Default build target:
 
 ```text
-Linux 7.1.3 with local version suffix -kernel-lab
+Linux 7.1.13 with local version suffix -kernel-lab
 ```
 
 The target can be overridden without editing scripts:
 
 ```bash
-KERNEL_VERSION=7.1.3 LOCAL_VERSION=-kernel-lab ./scripts/10-build-kernel-packages.sh --execute
+KERNEL_VERSION=7.1.13 LOCAL_VERSION=-kernel-lab ./scripts/10-build-kernel-packages.sh --execute
 ```
 
 ## Current host baseline
@@ -44,25 +44,29 @@ public documentation.
 
 | Component | Current value |
 | --- | --- |
-| Host | Local Debian 13 workstation |
-| Operating system | Debian GNU/Linux 13 (`trixie`) |
-| Current Debian kernel | Debian-packaged 6.12 series kernel |
-| CPU | Intel x86_64 CPU, 4 cores / 4 threads |
+| Host | Local Debian forky/sid laptop/workstation |
+| Operating system | Debian GNU/Linux forky/sid |
+| Current Debian kernel | Debian-packaged `7.1.12+deb14-amd64` |
+| CPU | Intel Core i7-8565U, 4 cores / 8 threads |
 | Architecture | `x86_64` |
-| Integrated GPU | Intel integrated graphics, driver `i915` |
-| Dedicated GPU | none detected |
-| Memory | sufficient RAM for local kernel builds |
-| Root storage | SATA SSD with sufficient free space for kernel builds |
-| Root filesystem | Btrfs root filesystem |
-| EFI system partition | vfat ESP mounted at `/boot/efi` |
-| Ethernet | Intel Ethernet, driver `e1000e` |
+| Integrated GPU | Intel UHD Graphics 620, driver `i915` |
+| Dedicated GPU | NVIDIA GeForce MX230 present; proprietary `nvidia` driver not installed |
+| Current NVIDIA handling | `nouveau` may bind the MX230; lab kernels intentionally omit NVIDIA/Nouveau modules |
+| Memory | 31 GiB RAM plus 4 GiB zram swap |
+| Root storage | 500 GB NVMe SSD with sufficient free space for kernel builds |
+| Root filesystem | LUKS-backed Btrfs root filesystem |
+| Boot filesystem | Btrfs `/boot`, vfat ESP mounted at `/boot/efi` |
+| Ethernet | none detected in the collected PCI inventory |
 | Wi-Fi | Intel wireless, driver `iwlwifi` |
 | Audio | Intel HD Audio, driver `snd_hda_intel` |
 | Desktop session | Wayland |
 | External modules | none required |
 
-The current machine uses Intel integrated graphics only. The project does not
-require external graphics modules for this host.
+The current machine should use Intel integrated graphics for the desktop. It
+has an NVIDIA dGPU, but this project deliberately does not require or install
+the proprietary NVIDIA driver. Generated lab kernels are expected to avoid
+NVIDIA/Nouveau modules; this is acceptable only while Intel `i915` remains the
+working graphics path.
 
 ## Safety guarantees
 
@@ -197,4 +201,3 @@ An earlier experiment showed that a successful kernel package build does not
 automatically make a custom kernel suitable for daily use. Required external
 modules, boot behavior, graphics, storage, network, and rollback paths must be
 validated for the exact target kernel before adoption.
-test
