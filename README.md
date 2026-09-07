@@ -197,3 +197,4 @@ An earlier experiment showed that a successful kernel package build does not
 automatically make a custom kernel suitable for daily use. Required external
 modules, boot behavior, graphics, storage, network, and rollback paths must be
 validated for the exact target kernel before adoption.
+test
