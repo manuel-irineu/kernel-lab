@@ -27,13 +27,13 @@ repository.
 Default build target:
 
 ```text
-Linux 7.1.13 with local version suffix -kernel-lab
+Linux 7.3-rc2 with local version suffix -kernel-lab
 ```
 
 The target can be overridden without editing scripts:
 
 ```bash
-KERNEL_VERSION=7.1.13 LOCAL_VERSION=-kernel-lab ./scripts/10-build-kernel-packages.sh --execute
+KERNEL_VERSION=7.3-rc2 LOCAL_VERSION=-kernel-lab ./scripts/10-build-kernel-packages.sh --execute
 ```
 
 ## Current host baseline
@@ -119,9 +119,18 @@ Run the build workflow:
 ./scripts/10-build-kernel-packages.sh --execute
 ```
 
-The workflow downloads sources, verifies the detached signature, prepares the
+The workflow uses the local tarball under `/home/manuel/Downloads/kernel` when
+present, verifies the detached signature when available, prepares the
 configuration, and runs `make bindeb-pkg`. It does not install the generated
 packages.
+
+For release-candidate tarballs without a local detached signature, signature
+verification fails by default. Use `SKIP_KERNEL_SIGNATURE=1` only when
+deliberately accepting an unverifiable local tarball:
+
+```bash
+SKIP_KERNEL_SIGNATURE=1 ./scripts/10-build-kernel-packages.sh --execute
+```
 
 Inspect generated packages before using them:
 
